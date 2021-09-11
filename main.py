@@ -161,6 +161,7 @@ def create_template():
     tenders_in_folder_count = len(get_list_of_tender_folders(year_folder))
     rename(year_folder, re.sub('\[\d*]$', f"[{tenders_in_folder_count}]", year_folder))
 
+
 def main():
     check_usb_device()
     check_folder_system()
