@@ -4,9 +4,6 @@ import re
 from lxml import etree
 from os import mkdir, listdir, rename, walk
 
-#debug
-import inspect
-
 
 # setup
 re_date = re.compile('(\d{4}-\d{2}-\d{2})')
