@@ -9,8 +9,8 @@ from os import mkdir, listdir, rename, walk
 re_date = re.compile('(\d{4}-\d{2}-\d{2})')
 re_time = re.compile('(\d{2}:\d{2}:\d{2})')
 re_url = re.compile('https://smarttender.biz/.*/\d{8}/')
-re_tender_folder = re.compile('\d{4}-\d{2}-\d{2}__\d{2}-\d{2}__\d{7}__.*')
-re_tender_index = re.compile('\d{7}')
+re_tender_folder = re.compile('\d{4}-\d{2}-\d{2}__\d{2}-\d{2}__\d{8}__.*')
+re_tender_index = re.compile('\d{8}')
 companies_arr = ["СУ24", "ДАККАР", "СПЕЦТЕХ ОСНАСТКА", "ЕЛЕКТРОСВІТЛОМОНТАЖ", "ФАБРИКА", "СВІТЛОЕЛЕКТРОБУД"]
 usb_path = 'E:'
 working_directory_name = 'Тендера'
@@ -42,7 +42,6 @@ def check_usb_device():
 
 def get_url():
     target_url = None
-    # target_url = 'https://smarttender.biz/ru/publichnye-zakupki-prozorro/22803418/'
     counter = 0
     while target_url is None and counter < 3:
         target_url = parse_url(input('Link: '))
@@ -64,7 +63,7 @@ def get_general_data():
     return {
             'general_data': json.loads(tree.xpath('//*[@type="application/ld+json"]')[0].text)['offers'],
             'description': description,
-            'tender_index': re.search(re_index, description).group()[slice(1, -1)],
+            'tender_index': re.search(re_index, description).group()[1:],
             'url': url
             }
 
@@ -153,9 +152,11 @@ def create_template():
     mkdir(tender_folder)
     mkdir(f"{tender_folder}/Закидка")
     mkdir(f"{tender_folder}/Подготовка")
+    # create general data file
     f = open(f"{tender_folder}/Закупівля.txt", 'w')
     f.write(f"#{general_data['description']}\n{general_data['url']}")
     f.close()
+    # TODO: implement shortcut file creation to open the tender link
 
     # update tender counter value on the folder
     tenders_in_folder_count = len(get_list_of_tender_folders(year_folder))
