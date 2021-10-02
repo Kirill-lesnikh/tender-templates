@@ -117,6 +117,14 @@ def get_list_of_tender_folders(year_folder):
     return tender_dirs
 
 
+def create_shortcut_file(target_path, url):
+    path = f"{target_path}/tender.url"
+    shortcut = open(path, 'w')
+    shortcut.write('[InternetShortcut]\n')
+    shortcut.write('URL=%s' % url)
+    shortcut.close()
+
+
 # create tender template with all needed fodlers
 def create_template():
     general_data = get_general_data()
@@ -156,7 +164,8 @@ def create_template():
     f = open(f"{tender_folder}/Закупівля.txt", 'w')
     f.write(f"#{general_data['description']}\n{general_data['url']}")
     f.close()
-    # TODO: implement shortcut file creation to open the tender link
+
+    create_shortcut_file(tender_folder, general_data['url'])
 
     # update tender counter value on the folder
     tenders_in_folder_count = len(get_list_of_tender_folders(year_folder))
